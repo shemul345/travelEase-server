@@ -26,11 +26,22 @@ async function run() {
     const db = client.db('travelEase_db')
     const vehiclesCollection = db.collection('vehicles')
 
+
     app.get('/vehicles', async(req, res) => {
       const result = await vehiclesCollection.find().toArray();
       res.send(result)
     })
 
+    app.post('/vehicles', async(req, res) => {
+      const data = req.body;
+      // console.log(data)
+      const result = await vehiclesCollection.insertOne(data)
+
+      res.send({
+        success: true,
+        result
+      })
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
