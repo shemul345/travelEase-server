@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = process.env.PORT || 3000;
 
@@ -26,12 +26,24 @@ async function run() {
     const db = client.db('travelEase_db')
     const vehiclesCollection = db.collection('vehicles')
 
-
+    // Get APIs
     app.get('/vehicles', async(req, res) => {
       const result = await vehiclesCollection.find().toArray();
       res.send(result)
     })
 
+  app.get('/vehicles/:id', async (req, res) => {
+        const {id} = req.params
+        const objectId = new ObjectId(id)
+        const result = await vehiclesCollection.findOne({_id: objectId})
+           
+        res.send({
+            success: true,
+            result
+        })
+    })
+
+    // Post APIs
     app.post('/vehicles', async(req, res) => {
       const data = req.body;
       // console.log(data)
