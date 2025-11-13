@@ -28,6 +28,7 @@ async function run() {
 
     const db = client.db('travelEase_db')
     const vehiclesCollection = db.collection('vehicles')
+    const bookingsCollection = db.collection('bookings')
 
     // Get APIs
     app.get('/vehicles', async(req, res) => {
@@ -50,6 +51,19 @@ async function run() {
       const email = req.query.email
       const result = await vehiclesCollection.find({ userEmail: email }).toArray();
       res.send(result);
+    })
+
+    // My bookings APIs
+    app.post('/bookings', async(req, res) => {
+      const data = req.body
+      const result = await bookingsCollection.insertOne(data);
+      res.send(result)
+    })
+
+    app.get('/myBookings', async (req, res) => {
+      const email = req.query.email
+      const result = await bookingsCollection.find({ booked_by: email }).toArray()
+      res.send(result)
     })
 
     // Post APIs
