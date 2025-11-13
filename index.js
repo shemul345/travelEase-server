@@ -5,7 +5,10 @@ const app = express()
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 
 const uri = "mongodb+srv://travelEase_db:gZy9GZ9Etx9iciBT@cluster0.svjtwrm.mongodb.net/?appName=Cluster0";
@@ -41,6 +44,12 @@ async function run() {
             success: true,
             result
         })
+    })
+
+    app.get('/myVehicles', async(req, res) => {
+      const email = req.query.email
+      const result = await vehiclesCollection.find({ userEmail: email }).toArray();
+      res.send(result);
     })
 
     // Post APIs
